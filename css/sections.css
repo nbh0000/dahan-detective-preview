@@ -1,0 +1,146 @@
+/* =========================================================
+   후기 캡처(휴대폰 화면) · 조사 원칙 · 진행 절차
+   ========================================================= */
+
+/* ---------- 후기 캡처: 사건 파일 카드 (폴더 탭 + 클립으로 고정한 캡처 + 제목) ---------- */
+.caps-wrap { container-type: inline-size; }
+.caps { grid-auto-columns: min(72%, 260px); gap: clamp(14px, 1.6vw, 24px); padding-block: 4px 10px; }
+.cap a { display: block; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.cap__tab { /* 서류철 탭 */
+  position: relative; display: inline-block; max-width: 80%; margin-left: 14px;
+  padding: 6px 14px 5px; border-radius: 6px 6px 0 0;
+  background: #2a251c; border: 1px solid rgb(201 169 106 / .28); border-bottom: 0;
+  font-size: .75rem; font-weight: 600; color: var(--gold-hi);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cap__file {
+  display: grid; border-radius: var(--r);
+  background: linear-gradient(180deg, #221e17, #17140f);
+  border: 1px solid rgb(201 169 106 / .22);
+  box-shadow: 0 22px 40px -28px rgb(0 0 0 / .9);
+  transition: border-color .3s var(--ease), transform .35s var(--ease);
+}
+.cap__shot { position: relative; display: block; margin: 16px 12px 0; aspect-ratio: 4 / 3; border-radius: 4px; background: var(--ink-2); }
+.cap__shot img { border-radius: 4px; }
+.cap__shot img {
+  width: 100%; height: 100%; object-fit: cover; object-position: top;
+  filter: grayscale(.35) sepia(.12) brightness(.9);
+  transition: filter .5s var(--ease), transform .6s var(--ease);
+}
+.cap__shot::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgb(236 228 212 / .08); border-radius: inherit; }
+.cap__shot i { /* 클립 */
+  position: absolute; z-index: 1; top: -14px; left: 16px; font-size: 34px; color: var(--gold-hi);
+  rotate: -14deg; filter: drop-shadow(0 3px 4px rgb(0 0 0 / .75));
+}
+.cap__body { display: grid; gap: 10px; padding: 16px 16px 18px; }
+.cap__title {
+  font-size: .9375rem; font-weight: 600; line-height: 1.5; color: var(--fog-0);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 3em;
+}
+.cap__meta {
+  display: flex; justify-content: space-between; gap: 8px; padding-top: 10px;
+  border-top: 1px dashed rgb(236 228 212 / .12);
+  font-size: .8125rem; color: var(--fog-2); font-variant-numeric: tabular-nums;
+}
+.cap a:active .cap__file { transform: scale(.98); }
+.cap a:focus-visible { outline: 2px solid var(--steel); outline-offset: 4px; border-radius: var(--r); }
+@media (hover: hover) and (pointer: fine) {
+  .cap a:hover .cap__file { border-color: rgb(201 169 106 / .55); transform: translateY(-4px); }
+  .cap a:hover .cap__shot img { filter: none; }
+  .cap a:hover .cap__title { color: var(--gold-hi); }
+}
+@media (min-width: 768px) { .caps { grid-auto-columns: calc((100% - var(--gut) * 2 - clamp(14px, 1.6vw, 24px) * 2) / 2.6); } }
+@media (min-width: 1024px) {
+  .caps { grid-auto-flow: row; grid-template-columns: repeat(4, 1fr); grid-auto-columns: auto; overflow: visible; margin: 0; padding: 0; }
+  .caps-progress { display: none; }
+  /* 줄이 반만 차지 않도록 5~7개일 때는 4개만 */
+  .caps:has(> :nth-child(5)):not(:has(> :nth-child(8))) > .cap:nth-child(n+5) { display: none; }
+}
+@media (min-width: 1600px) { .cap__title { font-size: 1rem; } }
+@media (prefers-reduced-motion: reduce) { .cap__file, .cap__shot img { transition: none; } }
+
+/* ---------- 조사 원칙: 두 장의 판으로 나눔 ---------- */
+.ledger { gap: 14px; padding: 0 !important; background: none !important; border: 0 !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+@media (min-width: 640px) { .ledger { grid-template-columns: 1fr 1fr; } }
+.ledger__col, .ledger__col:first-child {
+  position: relative; padding: clamp(24px, 2.4vw, 36px); border: 1px solid rgb(236 228 212 / .08); border-radius: var(--r);
+  background: rgb(14 13 10 / .72); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+.ledger__col::before { content: ""; position: absolute; inset: -1px -1px auto; height: 2px; border-radius: var(--r) var(--r) 0 0; background: var(--steel); }
+.ledger__col--no::before { background: rgb(224 163 154 / .55); }
+.ledger__col h3 { gap: 14px; font-size: clamp(1.125rem, 1rem + .4vw, 1.3125rem); }
+.ledger__ic {
+  flex: none; width: 44px; height: 44px; display: grid; place-items: center; border-radius: var(--r);
+  background: rgb(201 169 106 / .12); border: 1px solid rgb(201 169 106 / .3);
+}
+.ledger__ic i, .ledger__col h3 .ledger__ic i { font-size: 22px; color: var(--gold-hi); }
+.ledger__col--no .ledger__ic { background: rgb(224 163 154 / .08); border-color: rgb(224 163 154 / .28); }
+.ledger__col--no .ledger__ic i { color: var(--warn); }
+.ledger__col ul { margin-top: 22px; gap: 0; }
+.ledger__col li, .ledger__col--no li {
+  display: flex; gap: 12px; align-items: flex-start; padding: 13px 0 13px 0;
+  color: var(--fog-0); text-decoration: none; line-height: 1.55;
+}
+.ledger__col li + li { border-top: 1px solid rgb(236 228 212 / .07); }
+.ledger__col li::before { display: none; }
+.ledger__col li i { flex: none; margin-top: .2em; font-size: 1.05em; color: var(--steel); }
+.ledger__col--no li { color: var(--fog-1); }
+.ledger__col--no li i { color: var(--warn); }
+@media (min-width: 1024px) { .principle__grid { align-items: center; } }
+
+/* ---------- 진행 절차: 하나의 판 위 4단계 ---------- */
+.process .steps {
+  margin-top: clamp(40px, 5vw, 72px); gap: 0;
+  border: 1px solid rgb(236 228 212 / .08); border-radius: var(--r);
+  background: rgb(14 13 10 / .7); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  counter-reset: none;
+}
+.process .step, .process .step:last-child { padding: clamp(24px, 2.6vw, 40px); }
+.process .step::before { display: none !important; }
+.process .step + .step { border-top: 1px solid rgb(236 228 212 / .07); }
+.step__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: clamp(20px, 2.2vw, 32px); }
+.step__ic {
+  width: 52px; height: 52px; display: grid; place-items: center; border-radius: var(--r);
+  background: rgb(201 169 106 / .12); border: 1px solid rgb(201 169 106 / .3); color: var(--gold-hi); font-size: 24px;
+}
+.process .step__no {
+  position: static; width: auto; height: auto; border: 0; background: none;
+  font-family: var(--serif); font-weight: 500; font-size: clamp(2.5rem, 2rem + 1.6vw, 3.5rem); line-height: 1;
+  color: rgb(201 169 106 / .32);
+}
+.process .step h3 { padding-top: 0; font-size: clamp(1.1875rem, 1.05rem + .45vw, 1.375rem); }
+.process .step p { margin-top: 12px; color: var(--fog-1); line-height: 1.7; }
+/* 진행 막대: 단계 사이 연결 */
+.process .step { position: relative; }
+.process .step::after {
+  content: ""; position: absolute; left: clamp(24px, 2.6vw, 40px); top: calc(clamp(24px, 2.6vw, 40px) + 52px); bottom: 0;
+  width: 1px; background: linear-gradient(180deg, rgb(201 169 106 / .5), rgb(201 169 106 / 0));
+  translate: 26px 0;
+}
+.process .step::after { display: none; }
+.process .step p, .process .step h3 { padding-left: 0; }
+@media (min-width: 640px) and (max-width: 1023.98px) {
+  .process .steps { grid-template-columns: 1fr 1fr; }
+  .process .step + .step { border-top: 0; }
+  .process .step:nth-child(even) { border-left: 1px solid rgb(236 228 212 / .07); }
+  .process .step:nth-child(n+3) { border-top: 1px solid rgb(236 228 212 / .07); }
+  .process .step::after { display: none; }
+}
+@media (min-width: 1024px) {
+  .process .steps { grid-template-columns: repeat(4, 1fr); }
+  .process .step + .step { border-top: 0; border-left: 1px solid rgb(236 228 212 / .07); }
+  .process .step::after { /* 가로 연결선: 아이콘 오른쪽에서 다음 칸으로 */
+    left: calc(clamp(24px, 2.6vw, 40px) + 64px); right: calc(clamp(24px, 2.6vw, 40px) + 3.5rem); top: calc(clamp(24px, 2.6vw, 40px) + 26px); bottom: auto;
+    width: auto; height: 1px; translate: none;
+    background: linear-gradient(90deg, rgb(201 169 106 / .45), rgb(201 169 106 / .05));
+    transform: scaleX(0); transform-origin: left; transition: transform 1s .25s var(--ease);
+  }
+  .process .step:not(:last-child)::after { display: block; }
+  .process .step.is-in::after, html:not(.js) .process .step::after { transform: none; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .process .step { transition: background-color .3s var(--ease); }
+  .process .step:hover { background: rgb(201 169 106 / .04); }
+  .process .step:hover .step__no { color: rgb(201 169 106 / .6); }
+}
+@media (prefers-reduced-motion: reduce) { .process .step::after { transition: none; transform: none; } }
