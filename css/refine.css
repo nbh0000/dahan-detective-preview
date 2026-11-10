@@ -190,3 +190,10 @@ h3, .fx__name, .acc summary, .qf__hd h2, .promise__list strong, .bcard__t, .rv-c
 @media (min-width: 1600px) { .brand__emb { height: 66px; } .brand__word { height: 27px; } .brand__en img { height: 8px; } }
 @media (max-width: 767.98px) { .brand__emb { height: 44px; } .brand__word { height: 17px; } .brand__txt { gap: 5px; } .brand__en img { height: 5px; } }
 @media (orientation: landscape) and (max-height: 520px) { .brand__emb { height: 36px; } .brand__word { height: 15px; } .brand__en { display: none; } }
+
+/* 로고 글자: 원본에서 한글+영문 줄을 한 장으로 잘라 비율 고정 (가로 늘어짐 방지) */
+.brand__lock { display: block; height: 38px; width: auto; max-width: none; flex: none; }
+@media (min-width: 1600px) { .brand__lock { height: 42px; } }
+@media (max-width: 767.98px) { .brand__lock { height: 28px; } }
+@media (max-width: 359.98px) { .brand__lock { height: 24px; } }
+@media (orientation: landscape) and (max-height: 520px) { .brand__lock { height: 24px; } }

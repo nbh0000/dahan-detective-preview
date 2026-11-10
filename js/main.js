@@ -12,6 +12,56 @@
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
+  /* ---------- 히어로 배경 슬라이드 ---------- */
+  (() => {
+    const box = $('#heroSlides'), dotsBox = $('#heroDots');
+    if (!box || !dotsBox || reduceMotion || saveData) return;
+    const heroEl = box.closest('.hero');
+    const slides = $$('.hero__slide', box), dots = $$('.hero__dot', dotsBox), pauseBtn = $('#heroPause');
+    const DUR = 3500;
+    let cur = 0, timer = 0, paused = false, visible = true;
+    dotsBox.style.setProperty('--dur', DUR + 'ms');
+    // 첫 장이 보인 뒤 나머지 사진을 불러옴
+    const ready = () => box.classList.add('is-ready');
+    if (document.readyState === 'complete') setTimeout(ready, 300); else addEventListener('load', () => setTimeout(ready, 300));
+    const paint = () => {
+      dots.forEach((d, i) => {
+        d.classList.toggle('is-on', i === cur);
+        d.classList.toggle('is-done', i < cur);
+        if (i === cur) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
+      });
+    };
+    const schedule = () => {
+      clearTimeout(timer);
+      if (!paused && visible && !document.hidden) timer = setTimeout(() => go(cur + 1), DUR);
+    };
+    const go = (n) => {
+      const prev = slides[cur];
+      cur = (n + slides.length) % slides.length;
+      slides.forEach((el) => el.classList.remove('is-was'));
+      prev.classList.remove('is-on'); prev.classList.add('is-was');
+      const next = slides[cur];
+      next.style.animation = 'none'; void next.offsetWidth; next.style.animation = '';
+      next.classList.add('is-on');
+      dots.forEach((d) => d.classList.remove('is-on')); void dotsBox.offsetWidth;
+      paint();
+      schedule();
+    };
+    dots.forEach((d, i) => d.addEventListener('click', () => { if (i !== cur) go(i); }));
+    pauseBtn.addEventListener('click', () => {
+      paused = !paused;
+      heroEl.classList.toggle('is-paused', paused);
+      pauseBtn.setAttribute('aria-label', paused ? '자동 넘김 재생' : '자동 넘김 멈춤');
+      pauseBtn.innerHTML = '<i class="ph ph-' + (paused ? 'play' : 'pause') + '" aria-hidden="true"></i>';
+      if (paused) clearTimeout(timer); else go(cur + 1);
+    });
+    document.addEventListener('visibilitychange', schedule);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => { visible = e.isIntersecting; schedule(); }).observe(heroEl);
+    }
+    paint(); schedule();
+  })();
+
   /* ---------- 히어로 렌즈 ---------- */
   const hero = $('.hero');
   const lens = $('#lens');
